@@ -8,4 +8,9 @@ use Illuminate\Http\Request;
 class DtrScheduleController extends Controller
 {
     //
+    public function index(Request $request)
+    {
+        
+        return view('pages.dtr-settings.schedules.index');
+    }
 }

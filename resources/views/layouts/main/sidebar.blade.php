@@ -40,10 +40,10 @@
             </li>
             <li class="nav-header">DTR Settings</li>
             <li class="nav-item ">
-              <a href="{{ route('personnels.index')}}" class="nav-link {{ request()->routeIs('personnels.*') ? 'active' : ''}}">
-                <i class="fas fa-users"></i>
+              <a href="{{ route('dtr_schedules.index')}}" class="nav-link {{ request()->routeIs('dtr_schedules.*') ? 'active' : ''}}">
+                <i class="fas fa-calendar-alt"></i>
                 <p>
-                  Personnels
+                  DTR Schedules
                 </p>
               </a>
             </li>

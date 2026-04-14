@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\DtrScheduleController;
 use App\Http\Controllers\PersonnelController;
 
 Route::get('/', function () {
@@ -27,5 +28,8 @@ Route::group(["prefix" => "personnels", "as" => "personnels.", "middleware" => "
     Route::post("/update", [PersonnelController::class, "update"])->name("update");
     Route::get("/create", [PersonnelController::class, "create"])->name("create");
     Route::post("/store", [PersonnelController::class, "store"])->name("store");
+});
+Route::group(["prefix" => "dtr_schedules", "as" => "dtr_schedules.", "middleware" => "auth"], function () {
+    Route::get("/", [DtrScheduleController::class, "index"])->name("index");
 });
 
