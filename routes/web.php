@@ -31,5 +31,8 @@ Route::group(["prefix" => "personnels", "as" => "personnels.", "middleware" => "
 });
 Route::group(["prefix" => "dtr_schedules", "as" => "dtr_schedules.", "middleware" => "auth"], function () {
     Route::get("/", [DtrScheduleController::class, "index"])->name("index");
+    Route::post("/update", [DtrScheduleController::class, "update"])->name("update");
+    Route::post("/store", [DtrScheduleController::class, "store"])->name("store");
+    Route::delete("/delete/{id}", [DtrScheduleController::class, "delete"])->name("delete");
 });
 

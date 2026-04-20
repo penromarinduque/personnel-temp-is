@@ -15,8 +15,11 @@
   <!-- Theme style -->
   <link rel="stylesheet" href="{{ asset('adminlte3/dist/css/adminlte.min.css') }}">
   <link rel="shortcut icon" href="{{ asset('adminlte3/dist/img/favico.ico') }}" type="image/x-icon">
+  
   {{-- select 2 --}}
-  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+  <link href="{{ asset('/select2-4.1.0-rc/dist/css/select2.min.css') }}" rel="stylesheet" />
+  <link rel="stylesheet" href="{{ asset('/select2-bootstrap-5-theme-1.3.0/select2-bootstrap-5-theme.min.css') }}" />
+  
   
 </head>
 <body class="hold-transition sidebar-mini layout-fixed layout-navbar-fixed layout-footer-fixed">
@@ -83,6 +86,7 @@
 <!-- ./wrapper -->
 
 <!-- REQUIRED SCRIPTS -->
+<link href='https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css' rel='stylesheet'>
 <!-- jQuery -->
 <script src="{{ asset('adminlte3/plugins/jquery/jquery.min.js') }}"></script>
 <!-- Bootstrap -->
@@ -105,12 +109,22 @@
 {{-- <script src="{{ asset('adminlte3/dist/js/demo.js') }}"></script> --}}
 <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
 <script src="{{ asset('adminlte3/dist/js/pages/dashboard2.js') }}"></script>
+
+{{-- full calendar --}}
+<script src='{{ asset('fullcalendar-6.1.20/dist/index.global.min.js') }}'></script>
+{{-- <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.20/index.global.min.js"></script> --}}
+
+{{-- select2 --}}
+<script src="{{ asset('/select2-4.1.0-rc/dist/js/select2.min.js') }}"></script>
+
 @yield('script')
-<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 @yield('includes')
 <script>
     $(function () {
       $('[data-toggle="tooltip"]').tooltip()
+      $(".select2").select2({
+        theme: "bootstrap-5"
+      });
     })
     
     $(document).ready(function() {
