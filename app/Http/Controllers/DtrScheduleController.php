@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use App\Models\DtrOption;
 use App\Models\DtrSchedule;
+use App\Models\User;
 use App\Models\UserInfo;
 use Faker\Provider\Person;
 use Illuminate\Http\Request;
@@ -19,6 +20,7 @@ class DtrScheduleController extends Controller
         ->whereIn("status", ["Permanent", "COS"])
         ->get();
         $dtrOptions = DtrOption::all();
+        $employmentStatuses = UserInfo::query()->select("status")->distinct()->get();
 
         if(!$personnel) {
             $scheduleFcEvents = collect();
@@ -43,7 +45,8 @@ class DtrScheduleController extends Controller
             'personnel' => $personnel,
             'dtrSchedules' => $dtrSchedules,
             'scheduleFcEvents' => $scheduleFcEvents,
-            "dtrOptions" => $dtrOptions
+            "dtrOptions" => $dtrOptions,
+            "employmentStatuses" => $employmentStatuses
         ]);
     }
 
@@ -128,5 +131,44 @@ class DtrScheduleController extends Controller
         $schedule = DtrSchedule::find($id);
         $schedule->delete();
         return redirect()->back()->with('success', 'Successfully deleted schedule.');
+    }
+
+    public function bulkCreate(Request $request){
+        $validator = Validator::make($request->all(), [
+            'start_date' => 'required',
+            'end_date' => 'required|after:start_date',
+            'dtr_option' => 'required',
+            'employment_status' => 'required'
+        ]);
+
+        if($validator->fails()) {
+            return redirect()->back()->withErrors($validator, 'bulkCreateDtrSchedule')->withInput($request->all());
+        }
+        
+        // check for conflicting schedules
+        $schedule = DtrSchedule::query()
+        ->whereHas("personnel", function ($q) use ($request) {
+            $q->where("status", $request->employment_status);
+        })
+        ->where(function ($q) use ($request) {
+            $q->whereBetween("start_date", [$request->start_date, $request->end_date])
+            ->orWhereBetween("end_date", [$request->start_date, $request->end_date]);
+        })->first();
+        if($schedule) {
+            return redirect()->back()->with('error', 'There is a schedule overlap with the selected employment status.');
+        }
+
+        $personnels = UserInfo::where("status", $request->employment_status)->get();
+        $_scheds = $personnels->map(function ($personnel) use ($request) {
+            return [
+                'start_date' => $request->start_date,
+                'end_date' => $request->end_date,
+                'dtr_option_id' => $request->dtr_option,
+                'userinfo_id' => $personnel->userID
+            ];
+        });
+        DtrSchedule::insert($_scheds->toArray());
+
+        return redirect()->back()->with('success', 'Successfully added schedule.');
     }
 }

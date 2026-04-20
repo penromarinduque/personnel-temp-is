@@ -34,5 +34,6 @@ Route::group(["prefix" => "dtr_schedules", "as" => "dtr_schedules.", "middleware
     Route::post("/update", [DtrScheduleController::class, "update"])->name("update");
     Route::post("/store", [DtrScheduleController::class, "store"])->name("store");
     Route::delete("/delete/{id}", [DtrScheduleController::class, "delete"])->name("delete");
+    Route::post("/bulk-create", [DtrScheduleController::class, "bulkCreate"])->name("bulkCreate");
 });
 

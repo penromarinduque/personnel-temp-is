@@ -8,7 +8,7 @@
             <div class="card-header"> 
                 <div class="d-flex justify-content-end">
                     <a href="#" class="btn btn-sm btn-primary mx-1" onclick="showAddScheduleModal({{ $personnel }})">Add Schedule</a>
-                    <a href="#" class="btn btn-sm btn-primary mx-1">Bulk Create</a>
+                    <a href="#" class="btn btn-sm btn-primary mx-1" data-toggle="modal" data-target="#bulkCreateScheduleModal">Bulk Create</a>
                 </div>
             </div>
             <div class="card-body">
@@ -62,6 +62,7 @@
         </div>
     </div>
 
+    {{-- UPDATE SCHEDULE MODAL --}}
     <div class="modal fade" id="updateScheduleModal">
         <div class="modal-dialog">
             <form class="modal-content" action="{{ route('dtr_schedules.update') }}" method="POST">
@@ -113,6 +114,7 @@
         </div>
     </div>
 
+    {{-- ADD SCHEDULE MODAL --}}
     <div class="modal fade" id="addScheduleModal">
         <div class="modal-dialog">
             <form class="modal-content" action="{{ route('dtr_schedules.store') }}" method="POST">
@@ -145,6 +147,65 @@
                             <option value="">-Select-</option>
                             @foreach ($dtrOptions as $dtrOption)
                                 <option value="{{ $dtrOption->id }}" {{ old('dtr_option') == $dtrOption->id ? 'selected' : '' }}>{{ $dtrOption->description }}</option>
+                            @endforeach
+                        </select>
+                        @error('dtr_option', 'addDtrSchedule')
+                            <small class="form-text text-danger">{{ $message }}</small>
+                        @enderror
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-sm btn-primary btn-submit">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    {{-- BULK CREATE SCHEDULE MODAL --}}
+    <div class="modal fade" id="bulkCreateScheduleModal">
+        <div class="modal-dialog">
+            <form class="modal-content" action="{{ route('dtr_schedules.bulkCreate') }}" method="POST">
+                <div class="modal-header">
+                    <h5 class="modal-title">Bulk Create Schedule</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    @csrf
+                    <div class="mb-2">
+                        <label for="start_date">Start Date</label>
+                        <input type="date" name="start_date" id="start_date" class="form-control form-control-sm" value="{{ old('start_date') }}">
+                        @error('start_date', 'addDtrSchedule')
+                            <small class="form-text text-danger">{{ $message }}</small>
+                        @enderror
+                    </div>
+                    <div class="mb-2">
+                        <label for="end_date">End Date</label>
+                        <input type="date" name="end_date" id="end_date" class="form-control form-control-sm" value="{{ old('end_date') }}">
+                        @error('end_date', 'addDtrSchedule')
+                            <small class="form-text text-danger">{{ $message }}</small>
+                        @enderror
+                    </div>
+                    <div class="mb-2">
+                        <label for="dtr_option">DTR Option</label>
+                        <select name="dtr_option" id="dtr_option" class="form-control form-control-sm">
+                            <option value="">-Select-</option>
+                            @foreach ($dtrOptions as $dtrOption)
+                                <option value="{{ $dtrOption->id }}" {{ old('dtr_option') == $dtrOption->id ? 'selected' : '' }}>{{ $dtrOption->description }}</option>
+                            @endforeach
+                        </select>
+                        @error('dtr_option', 'addDtrSchedule')
+                            <small class="form-text text-danger">{{ $message }}</small>
+                        @enderror
+                    </div>
+                    <div class="mb-2">
+                        <label for="employment_status">Employment Status</label>
+                        <select name="employment_status" id="employment_status" class="form-control form-control-sm">
+                            <option value="">-Select-</option>
+                            @foreach ($employmentStatuses as $_status)
+                                <option value="{{ $_status->status }}" {{ old('employment_status') == $_status->status ? 'selected' : '' }}>{{ $_status->status }}</option>
                             @endforeach
                         </select>
                         @error('dtr_option', 'addDtrSchedule')
@@ -235,7 +296,6 @@
             $('#end_date').val('');
             $('#dtr_option').val('');
         }
-
 
         // function showViewScheduleModal(info) {
         //     const event = info.event.toPlainObject();
