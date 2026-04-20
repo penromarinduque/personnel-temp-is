@@ -159,6 +159,7 @@ class DtrScheduleController extends Controller
         }
 
         $personnels = UserInfo::where("status", $request->employment_status)->get();
+        
         $_scheds = $personnels->map(function ($personnel) use ($request) {
             return [
                 'start_date' => $request->start_date,
@@ -167,6 +168,7 @@ class DtrScheduleController extends Controller
                 'userinfo_id' => $personnel->userID
             ];
         });
+
         DtrSchedule::insert($_scheds->toArray());
 
         return redirect()->back()->with('success', 'Successfully added schedule.');
