@@ -113,6 +113,7 @@ class DtrScheduleController extends Controller
             $q->whereBetween("start_date", [$request->start_date, $request->end_date])
             ->orWhereBetween("end_date", [$request->start_date, $request->end_date]);
         })->first();
+        
         if($schedule) {
             return redirect()->back()->with('error', 'Schedule already exists or overlaps.');
         }
